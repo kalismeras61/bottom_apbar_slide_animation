@@ -98,21 +98,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           controller: _tabController,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 0, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
+      bottomNavigationBar: AnimatedOpacity(
+        duration: Duration(milliseconds: 300),
+        opacity: showNavBar ? 1 : 0,
+        child: Visibility(
+          visible: showNavBar,
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: 0, // this will be set when a new tab is tapped
+            items: [
+              BottomNavigationBarItem(
+                icon: new Icon(Icons.home),
+                title: new Text('Home'),
+              ),
+              BottomNavigationBarItem(
+                icon: new Icon(Icons.mail),
+                title: new Text('Messages'),
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), title: Text('Profile'))
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            title: new Text('Messages'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('Profile'))
-        ],
+        ),
       ),
     );
   }
