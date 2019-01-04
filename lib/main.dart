@@ -26,6 +26,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   AnimationController _animationController;
 
   bool showNavBar = true;
+  bool showTabbar = true;
+  int _tabbarIndex = 0;
+
+  final List<Widget> _children = [];
 
   _scrollListener() {
     if (_scrollViewController.position.userScrollDirection.toString() ==
@@ -76,17 +80,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               pinned: true,
               floating: true,
               forceElevated: boxIsScrolled,
-              bottom: TabBar(
-                tabs: <Widget>[
-                  Tab(
-                    text: "Home",
-                  ),
-                  Tab(
-                    text: "Second page",
-                  ),
-                ],
-                controller: _tabController,
-              ),
+              bottom: showTabbar
+                  ? TabBar(
+                      tabs: <Widget>[
+                        Tab(
+                          text: "Home",
+                        ),
+                        Tab(
+                          text: "Second page",
+                        ),
+                      ],
+                      controller: _tabController,
+                    )
+                  : null,
             )
           ];
         },
@@ -104,8 +110,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         child: Visibility(
           visible: showNavBar,
           child: BottomNavigationBar(
+            onTap: (value) {
+              setState(() {
+                _tabbarIndex = value;
+              });
+              if (value == 2) {
+                setState(() {
+                  showTabbar = false;
+                });
+                _tabController.animateTo(
+                  1,
+                  curve: Curves.easeIn,
+                  duration: Duration(milliseconds: 10),
+                );
+              } else {
+                setState(() {
+                  showTabbar = true;
+                });
+              }
+            },
             type: BottomNavigationBarType.fixed,
-            currentIndex: 0, // this will be set when a new tab is tapped
+            currentIndex:
+                _tabbarIndex, // this will be set when a new tab is tapped
             items: [
               BottomNavigationBarItem(
                 icon: new Icon(Icons.home),
@@ -116,7 +142,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 title: new Text('Messages'),
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.person), title: Text('Profile'))
+                  icon: Icon(Icons.person),
+                  title: Text(
+                    'Profile',
+                  ))
             ],
           ),
         ),
